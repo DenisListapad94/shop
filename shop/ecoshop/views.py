@@ -3,21 +3,56 @@ import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 
+class User:
+    def __init__(self,name,age):
+        self.name = name
+        self.age = age
+
+GOODS = {
+    "apple": {
+        "cost":4.24,
+        "count": 1000,
+        "delive":["Belarus","Poland","Russia"]
+    },
+    "orange": {
+        "cost": 7.24,
+        "count": 100,
+        "delive":["SAR","Spain","Portugal"]
+    },
+    "grape": {
+        "cost": 11.33,
+        "count": 1000,
+        "delive": ["Spain","Turkey","Italy"]
+    }
+}
+
 
 def index_ecoshop(request):
-    return HttpResponse("Hello, world. You're at the ecoshop index.")
+    return render(request,"index.html")
+
 
 def info_ecoshop(request,ecoshop,street,number):
-    return HttpResponse(f"{ecoshop} on address {street} {number}")
+    context = {
+        "ecoshop": ecoshop,
+        "street":street,
+        "number":number
+    }
+    return render(request,"info.html",context=context)
+
 
 def regular_year_views(request,year):
     return HttpResponse(f"year build is {year}")
 
 
-def data_views(request):
-    return HttpResponse(f"<h1>I am in tag h1</h1>")
+def data_user_views(request):
+    user = User("Vasya",23)
+    context = {
+        "user": user,
+    }
+    return render(request, "get_data_user.html", context=context)
 
-def current_datetime(request):
-    now = datetime.datetime.now()
-    html = "<html><body><h1>It is now %s.</h1></body></html>" % now
-    return HttpResponse(html)
+def goods_catalog(request):
+    context = {
+        "goods": GOODS
+    }
+    return render(request, "goods_catalog.html", context=context)

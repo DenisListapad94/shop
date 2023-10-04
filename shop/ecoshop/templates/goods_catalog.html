@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Catalog{% endblock %}
+
+{% block content %}
+<h3>Products catalog</h3>
+<ul>
+    {% for good_key,good_val in goods.items %}
+         <li>
+             {{ good_key}}
+             {% for data_key,data_val in good_val.items %}
+                {% if data_key == 'delive' %}
+                    <p>{{data_key}}
+                    {% for country in data_val %}
+                        {{country}}
+                    {% endfor %}
+                    </p>
+                {%else%}
+                    <p>{{data_key}} {{data_val}}</p>
+                {%endif%}
+             {% endfor %}
+         </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
