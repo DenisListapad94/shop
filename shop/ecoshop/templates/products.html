@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}products{% endblock %}
+
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/products.css' %}" >
+<!--{% static "C:/Users/Denis/PycharmProjects/shop/shop/ecoshop/static/css/products.css" %}-->
+
+<section class="section-products">
+		<div class="container">
+				<div class="row justify-content-center text-center">
+						<div class="col-md-8 col-lg-6">
+								<div class="header">
+										<h3>Featured Product</h3>
+										<h2>Popular Products</h2>
+								</div>
+						</div>
+				</div>
+				<div class="row">
+					{% for prod_key,prod_val in goods.items %}
+						{% for key,value in prod_val.items %}
+						<div class="col-md-6 col-lg-4 col-xl-3">
+
+								{% if key == 'id' %}
+									<div id="product-{{value}}" class="single-product" >
+
+
+										<div class="part-1">
+												<ul>
+														<li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+												</ul>
+										</div>
+
+										<div class="part-2">
+											{% if key == 'price' %}
+												<h4 class="product-price">${{value}}</h4>
+											{% endif %}
+										</div>
+								</div>
+								{% endif %}
+
+						</div>
+						{% endfor %}
+					{% endfor %}
+
+				</div>
+		</div>
+</section>
+
+{% endblock %}
