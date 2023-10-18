@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from .models import ProductsReviews,Person
 from django.shortcuts import render
 
 
@@ -28,7 +29,14 @@ def index_ecoshop(request):
     return render(request, "index.html")
 
 def comments(request):
-    return render(request, "comments.html")
+    comments = ProductsReviews.objects.select_related("product").prefetch_related("product__person_set").all()
+    persons = Person.objects.prefetch_related("product").all()
+    context = {
+        "comments": comments,
+        "persons": persons
+    }
+
+    return render(request, "comments.html",context=context)
 
 def products(request):
     context = {

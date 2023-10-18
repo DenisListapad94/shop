@@ -1,10 +1,12 @@
-from .models import Product,ReviewsProducts,Vendor,Shipper,PassportShipper
+from .models import Product,ProductsReviews,Vendor,Shipper,Passport,VendorReviews,ShipperReviews
 
 from django.contrib import admin
 
 # Register your models here.
 admin.site.register(Product)
-admin.site.register(ReviewsProducts)
+admin.site.register(ProductsReviews)
+admin.site.register(VendorReviews)
+admin.site.register(ShipperReviews)
 admin.site.register(Vendor)
 admin.site.register(Shipper)
-admin.site.register(PassportShipper)
+admin.site.register(Passport)
