@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from .models import ProductsReviews,Person
+from .models import ProductsReviews, Person, Product
 from django.shortcuts import render
 
 
@@ -39,8 +39,9 @@ def comments(request):
     return render(request, "comments.html",context=context)
 
 def products(request):
+    products = Product.objects.filter(price__gt=0.5).order_by("amount")[:100]
     context = {
-        "goods": GOODS
+        "products": products
     }
     return render(request, "products.html", context=context)
 # def info_ecoshop(request, ecoshop, street, number):

@@ -1,9 +1,14 @@
 from django.db import models
 
 
-
-
 class Product(models.Model):
+    class Meta:
+        indexes = [
+            models.Index(fields=["name", "price"]),
+            # models.Index(fields=["amount"], name="amount_idx"),
+            models.Index(fields=["price","-amount"], name="price_amount_idx"),
+        ]
+
     CATEGORY = [
         ("FR", "Fruit"),
         ("VG", "Vegetable"),
