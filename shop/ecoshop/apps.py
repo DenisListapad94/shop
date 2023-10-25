@@ -4,3 +4,4 @@ from django.apps import AppConfig
 class EcoshopConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'ecoshop'
+    verbose_name = "магазин"

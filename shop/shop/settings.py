@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "debug_toolbar",
     'django_extensions',
-    'ecoshop',
+    'ecoshop.apps.EcoshopConfig',
     "django_seed",
 
 ]

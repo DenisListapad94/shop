@@ -11,6 +11,7 @@ class Product(models.Model):
             # models.Index(fields=["amount"], name="amount_idx"),
             models.Index(fields=["price","-amount"], name="price_amount_idx"),
         ]
+        verbose_name_plural = "Продукты"
 
     CATEGORY = [
         ("FR", "Fruit"),
@@ -21,14 +22,15 @@ class Product(models.Model):
         ("FS", "Fish"),
         ("AL", "Alcohol"),
     ]
-    name = models.CharField(max_length=30)
-    description = models.CharField(max_length=100,blank=False,default="perfect products")
-    price = models.FloatField()
-    amount = models.PositiveIntegerField()
+    name = models.CharField(max_length=30,verbose_name="Название")
+    description = models.CharField(max_length=100,blank=False,default="perfect products",verbose_name="Описание")
+    price = models.FloatField(verbose_name="Стоимость")
+    amount = models.PositiveIntegerField(verbose_name="Количество")
     delivery_date = models.DateField(auto_now_add=True)
     category = models.CharField(
         max_length=2,
         choices=CATEGORY,
+        verbose_name = "Категория"
     )
     def __str__(self):
         return self.name
@@ -86,9 +88,9 @@ class ShipperReviews(Reviews):
         return self.title
 
 
-@receiver(request_finished)
-def my_callback(sender, **kwargs):
-    print("Request finished!")
+# @receiver(request_finished)
+# def my_callback(sender, **kwargs):
+#     print("Request finished!")
 
 
 
