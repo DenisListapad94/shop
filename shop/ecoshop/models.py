@@ -1,5 +1,8 @@
 from django.db import models
 
+from django.db.models.signals import post_save
+from django.core.signals import request_finished
+from django.dispatch import receiver
 
 class Product(models.Model):
     class Meta:
@@ -83,9 +86,22 @@ class ShipperReviews(Reviews):
         return self.title
 
 
+@receiver(request_finished)
+def my_callback(sender, **kwargs):
+    print("Request finished!")
 
 
 
+@receiver(post_save, sender=Person)
+def user_created(sender, instance, **kwargs):
+    print('signal work')
+    # print(sender)
+    # print(instance)
+    # print(instance.age)
+    # hobby = Hobbies.objects.get(id=1)
+    # instance.hobbies_set.add(hobby)
+
+post_save.connect(receiver=user_created, sender=Person)
 
 
 
