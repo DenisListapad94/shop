@@ -1,0 +1,28 @@
+
+{% extends "base.html" %}
+
+{% block title %}new product{% endblock %}
+
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<form action="/ecoshop/create_review/" method="POST">
+    {% csrf_token %}
+    {{ form}}
+<!--    <label for="product_reviews">Your review: </label>-->
+<!--    <input id="product_reviews" type="text" name="product_reviews">-->
+
+<!--    <label for="description">Your description: </label>-->
+<!--    <input id="description" type="text" name="description">-->
+
+<!--    <label for="author">author: </label>-->
+<!--    <input id="author" type="text" name="author">-->
+
+<!--    <label for="product">Your review: </label>-->
+<!--    <input id="product" type="text" name="product">-->
+
+    <input type="submit" value="OK">
+</form>
+
+{% endblock %}
