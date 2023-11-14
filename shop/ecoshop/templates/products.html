@@ -5,10 +5,43 @@
 
 {% block content %}
 
-<!--<link rel="stylesheet" href="{% static 'css/products.css' %}">-->
-{% for product in products %}
-	<h2>{{product.name}} {{product.price}}</h2>
+{% for obj in page_obj %}
+    {{ obj.name}}<br>
+    {% if obj.image %}
+        <img style="max-height: 100px" src="{{ obj.image.url }}"/>
+    {% endif %}
+
 {% endfor %}
+
+
+
+<nav aria-label="...">
+    <ul class="pagination">
+
+  {% if page_obj.has_previous %}
+  <li class="page-item">
+      <a class="page-link" href="?page=1">first</a>
+  </li>
+  {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+       <li class="page-item active" aria-current="page">
+        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+   {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+  <li class="page-item" aria-current="page">
+  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+   {% if page_obj.has_next %}
+      <li class="page-item">
+       <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last</a>
+      </li>
+    {% endif %}
+</ul>
+</nav>
 
 <!--{% static "C:/Users/Denis/PycharmProjects/shop/shop/ecoshop/static/css/products.css" %}-->
 

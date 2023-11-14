@@ -1,7 +1,7 @@
 from django.db.models import F
 
 from .models import Product,ProductsReviews,Vendor,Shipper,Passport,VendorReviews,ShipperReviews,Person
-
+from django.utils.safestring import mark_safe
 from django.contrib import admin
 
 @admin.action(description="Up price selected instance on 10")
@@ -24,10 +24,17 @@ class ProductPerson_m2m_Inline(admin.StackedInline):
     model = Person.product.through
 
 
+
+@admin.display(description='фото')
+def get_html_photo(objects):
+    if objects.image:
+        return mark_safe(f'<img src={objects.image.url} width=50>')
+
+
 class ProductAdmin(admin.ModelAdmin):
     view_on_site = True
     save_on_top = True
-    list_display = ["name", "price", "amount","category","view_description"]
+    list_display = ["name", "price", "amount","category","view_description",get_html_photo]
     list_display_links = ["name", "view_description",]
     list_editable = ["price", "amount"]
     readonly_fields = ["category"]

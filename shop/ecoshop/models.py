@@ -27,6 +27,12 @@ class Product(models.Model):
     price = models.FloatField(verbose_name="Стоимость")
     amount = models.PositiveIntegerField(verbose_name="Количество")
     delivery_date = models.DateField(auto_now_add=True)
+    image = models.ImageField(
+        upload_to="products",
+        verbose_name="картинки",
+        null=True,
+        blank=True
+    )
     category = models.CharField(
         max_length=2,
         choices=CATEGORY,
@@ -34,6 +40,7 @@ class Product(models.Model):
     )
     def __str__(self):
         return self.name
+
 
 class Person(models.Model):
     name = models.CharField(max_length=30,null=True)
