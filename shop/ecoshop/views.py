@@ -1,7 +1,8 @@
 import pdb
 
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.cache import caches
-
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.cache import cache_page
 
 from django.http import HttpResponseRedirect, HttpResponse
@@ -39,11 +40,12 @@ GOODS = {
 class MyView(TemplateView):
     template_name = "info.html"
 
-
 def index_ecoshop(request):
     return render(request, "index.html")
 
-@cache_page(60,cache="redis_cache")
+# @cache_page(60,cache="redis_cache")
+@permission_required("ecoshop.delete_product", raise_exception=True)
+@login_required(login_url="/admin/accounts/login/")
 def comments(request):
     import time
     time.sleep(10)
@@ -65,13 +67,15 @@ def comments(request):
 #     return render(request, "products.html", context=context)
 
 
-class ProductViews(ListView):
-    import time
-    time.sleep(10)
+class ProductViews(PermissionRequiredMixin,LoginRequiredMixin,ListView,):
+    permission_required = "ecoshop.delete_product"
+    login_url = "/admin/accounts/login/"
+    # import time
+    # time.sleep(10)
     template_name = "products.html"
     model = Product
-    paginate_by = 10
-    paginate_orphans = 3
+    # paginate_by = 10
+    # paginate_orphans = 3
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context["products"] = Product.objects.all()

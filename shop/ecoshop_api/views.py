@@ -1,17 +1,16 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from django.shortcuts import render,HttpResponse
-from rest_framework import status, filters
-from rest_framework.decorators import api_view
+from rest_framework import filters
+from rest_framework.generics import (
+    ListAPIView, GenericAPIView
+)
 from rest_framework.mixins import RetrieveModelMixin, DestroyModelMixin, UpdateModelMixin
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView, GenericAPIView, RetrieveUpdateDestroyAPIView, \
-    ListCreateAPIView
-from .serializers import ProductApiSerializer
-from .models import ProductApi
-from django.http import JsonResponse, Http404
-from .paginations import BaseSetPagination
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
+from .auth_token import BearerTokenAuthentication
+from .models import ProductApi
+from .paginations import BaseSetPagination
+from .serializers import ProductApiSerializer
+from rest_framework.authentication import TokenAuthentication,BasicAuthentication,SessionAuthentication
 
 # @api_view(['GET'])
 # def get_products(request):
@@ -20,8 +19,8 @@ from .paginations import BaseSetPagination
 #     for product in products:
 #         output.append({'name': product.name, 'price': product.price,'amount':product.amount})
 #     return JsonResponse(output, safe=False)
-    # import pdb;pdb.set_trace()
-    # return Response({"message": "Hello, world!"})
+# import pdb;pdb.set_trace()
+# return Response({"message": "Hello, world!"})
 
 # class ProductsList(APIView):
 #     def get(self, request, format=None):
@@ -66,10 +65,16 @@ from .paginations import BaseSetPagination
 #         product.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class ReadOnly:
+    pass
+
+
 class ProductsList(ListAPIView):
+    # authentication_classes = [BearerTokenAuthentication,BasicAuthentication,SessionAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminUser]
     queryset = ProductApi.objects.all()
     serializer_class = ProductApiSerializer
-    filter_backends = [DjangoFilterBackend,filters.OrderingFilter,filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_fields = ['name', 'amount']
     ordering_fields = ['name', 'amount']
     search_fields = ['name', 'price']
@@ -81,6 +86,8 @@ class ProductDetail(RetrieveModelMixin,
                     UpdateModelMixin,
                     DestroyModelMixin,
                     GenericAPIView):
+    # authentication_classes = [BearerTokenAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminUser]
     queryset = ProductApi.objects.all()
     serializer_class = ProductApiSerializer
 
@@ -92,7 +99,6 @@ class ProductDetail(RetrieveModelMixin,
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-
 
 # class ProductsList(ListCreateAPIView):
 #     queryset = ProductApi.objects.all()
