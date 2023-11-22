@@ -1,10 +1,11 @@
 from django.urls import path,re_path
 
-from .views import index_ecoshop,comments,MyView,ProductViews,create_review
+from .views import index_ecoshop,comments,MyView,ProductViews,create_review,create_product_form
 from django.views.decorators.cache import cache_page
 
 urlpatterns = [
     path("index/", index_ecoshop,name = "index_ecoshop"),
+    path("create_product/", create_product_form,name = "create_product"),
     # path("info/<str:ecoshop>/<slug:street>/<int:number>/", info_ecoshop),
     path("products/", cache_page(30*1)(ProductViews.as_view()),name = "products"),
     path("comments/", comments, name="comments"),

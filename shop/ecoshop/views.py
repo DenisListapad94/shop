@@ -1,18 +1,12 @@
-import pdb
-
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.core.cache import caches
 from django.contrib.auth.decorators import login_required, permission_required
-from django.views.decorators.cache import cache_page
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, ListView
 
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
-from django.views import View
-from django.views.generic import TemplateView, ListView, FormView
-
-from .forms import ProductsReviewsForm
-from .models import ProductsReviews, Person, Product, Reviews
-
+from .forms import ProductsReviewsForm, ProductForm
+from .models import ProductsReviews, Person, Product
+from .tasks import summa, generate_photo
 
 
 class User:
@@ -40,8 +34,11 @@ GOODS = {
 class MyView(TemplateView):
     template_name = "info.html"
 
+
 def index_ecoshop(request):
+    summa.apply_async((2, 3))
     return render(request, "index.html")
+
 
 # @cache_page(60,cache="redis_cache")
 @permission_required("ecoshop.delete_product", raise_exception=True)
@@ -67,7 +64,7 @@ def comments(request):
 #     return render(request, "products.html", context=context)
 
 
-class ProductViews(PermissionRequiredMixin,LoginRequiredMixin,ListView,):
+class ProductViews(PermissionRequiredMixin, LoginRequiredMixin, ListView, ):
     permission_required = "ecoshop.delete_product"
     login_url = "/admin/accounts/login/"
     # import time
@@ -80,6 +77,7 @@ class ProductViews(PermissionRequiredMixin,LoginRequiredMixin,ListView,):
     #     context = super().get_context_data(**kwargs)
     #     context["products"] = Product.objects.all()
     #     return context
+
 
 # class ReviewFormView(FormView):
 #     template_name = "create_review_product.html"
@@ -105,6 +103,8 @@ def create_review(request):
 
     context["form"] = form
     return render(request, "create_review_product.html", context=context)
+
+
 # def info_ecoshop(request, ecoshop, street, number):
 #     context = {
 #         "ecoshop": ecoshop,
@@ -124,3 +124,41 @@ def create_review(request):
 #         "goods": GOODS
 #     }
 #     return render(request, "goods_catalog.html", context=context)
+
+
+def create_product_form(request):
+    context = {}
+    if request.method == "POST":
+        form = ProductForm(request.POST, request.FILES)
+        context["form"] = form
+        if form.is_valid():
+            name = request.POST['name']
+            price = request.POST['price']
+            description = request.POST['description']
+            amount = request.POST['amount']
+
+            category = request.POST["category"]
+            if 'image' in request.FILES:
+                image = request.FILES["image"]
+                product = Product(
+                    name=name,
+                    price=price,
+                    description=description,
+                    amount=amount,
+                    image=image,
+                    category=category
+                )
+                product.save()
+            else:
+                generate_photo.delay(
+                    name=name,
+                    price=price,
+                    description=description,
+                    amount=amount,
+                    category=category
+                )
+            return redirect("products")
+    else:
+        form = ProductForm()
+        context["form"] = form
+    return render(request, "create_product.html", context=context)

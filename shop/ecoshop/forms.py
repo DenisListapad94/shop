@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import Textarea
 
-from .models import ProductsReviews
+from .models import ProductsReviews, Product
 
 
 # class ProductsReviewsForm(forms.Form):
@@ -14,6 +14,20 @@ class ProductsReviewsForm(forms.ModelForm):
     class Meta:
         model = ProductsReviews
         fields = ['title', 'description', 'author', 'product']
+        widgets = {
+            "description": Textarea(
+                attrs={
+                    "cols": 80,
+                    "rows": 20,
+                    'class': 'special'
+                }
+            ),
+        }
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'description', 'price', 'amount','image','category']
         widgets = {
             "description": Textarea(
                 attrs={
