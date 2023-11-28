@@ -6,7 +6,7 @@ from django.views.generic import TemplateView, ListView
 
 from .forms import ProductsReviewsForm, ProductForm
 from .models import ProductsReviews, Person, Product
-from .tasks import summa, generate_photo
+from .tasks import summa, generate_photo, send_msg_for_mail
 
 
 class User:
@@ -37,6 +37,7 @@ class MyView(TemplateView):
 
 def index_ecoshop(request):
     summa.apply_async((2, 3))
+    send_msg_for_mail.apply_async(("djangotester28@gmail.com",))
     return render(request, "index.html")
 
 

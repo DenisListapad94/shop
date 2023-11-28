@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 
+from celery.schedules import crontab
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -242,3 +244,25 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+# CELERY_BEAT_SCHEDULE = {
+#     "summa": {
+#         "task": "shop.ecoshop.tasks.summa",
+#         "schedule": crontab(minute="*/1"),
+#
+#     },
+#     # "mul": {
+#     #     "task": "shop.ecoshop.tasks.mul",
+#     #     "schedule": crontab(minute="*/0.5"),
+#     # },
+# }
+
+
+# SMTP Configuration Options
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  #for tests
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'den72414@gmail.com'
+EMAIL_HOST_PASSWORD = 'Django1234'

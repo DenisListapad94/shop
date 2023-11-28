@@ -1,7 +1,6 @@
 # import time
 #
 
-import time
 #
 # def add_friend(name,age):
 #     if name in friends:
@@ -16,7 +15,6 @@ import time
 # print(add_friend("Kate", 23))
 #
 # print(add_friend("Max", 23))
-from functools import lru_cache
 
 # friends = {}
 
@@ -56,3 +54,55 @@ from functools import lru_cache
 # print(get_current_time(datetime.datetime.utcnow()))
 # print(get_current_time(datetime.datetime.utcnow()))
 # print(get_current_time(datetime.datetime.utcnow()))
+
+
+#
+# send_mail(
+#     "Subject here",
+#     "Here is the message.",
+#     "from@example.com",
+#     ["to@example.com"],
+#     fail_silently=False,
+# )
+#
+import unittest
+
+
+# class Fox:
+#     pass
+
+class Queue:
+    POSSIBLE_STRATEGIES = ["FIFO","LIFO"]
+    def __init__(self, strategy = "FIFO"):
+        if strategy not in self.POSSIBLE_STRATEGIES:
+            raise ValueError
+        self.strategy = strategy
+
+
+class TestQueue(unittest.TestCase):
+    def test_queue_exist(self):
+        queue = Queue()
+        self.assertIsInstance(queue, Queue)
+
+    def test_set_wrong_strategy(self):
+        with self.assertRaises(ValueError):
+            wrong_strategy = "FIFA"
+            queue = Queue(wrong_strategy)
+
+
+# class TestMethods(unittest.TestCase):
+#
+#
+#     def test_mul(self):
+#         val_1,val_2 = 3,4
+#         mul = val_1 * val_2
+#         self.assertEqual(mul ,12)
+#
+#     def test_summa(self):
+#         val_1,val_2 = 3,4
+#         summa = val_1 + val_2
+#         self.assertEqual(summa ,6)
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -13,5 +13,17 @@ app = Celery('shop')
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
+
+from celery.schedules import crontab
+
+app.conf.beat_schedule = {
+    # Executes every 1 minutes
+    'summa': {
+        'task': 'ecoshop.tasks.summa',
+        'schedule': crontab(minute="*/1"),
+        'args': (16, 16),
+    },
+}
+
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
