@@ -36,8 +36,8 @@ class MyView(TemplateView):
 
 
 def index_ecoshop(request):
-    summa.apply_async((2, 3))
-    send_msg_for_mail.apply_async(("djangotester28@gmail.com",))
+    # summa.apply_async((2, 3))
+    # send_msg_for_mail.apply_async(("djangotester28@gmail.com",))
     return render(request, "index.html")
 
 

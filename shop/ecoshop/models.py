@@ -99,7 +99,8 @@ class ShipperReviews(Reviews):
 # def my_callback(sender, **kwargs):
 #     print("Request finished!")
 
-
+class QueueTest(models.Model):
+    value = models.IntegerField()
 
 @receiver(post_save, sender=Person)
 def user_created(sender, instance, **kwargs):

@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+from dotenv import load_dotenv
+
+load_dotenv(".env")
 
 from celery.schedules import crontab
 
@@ -110,11 +114,11 @@ WSGI_APPLICATION = 'shop.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecoshop',
-        'USER': 'admin',
-        'PASSWORD': '1234',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': os.environ.get("DB_NAME","ecoshop"),
+        'USER': os.environ.get("DB_USER","admin"),
+        'PASSWORD': os.environ.get("DB_PASS","1234"),
+        'HOST': os.environ.get("DB_HOST","127.0.0.1"),
+        'PORT': os.environ.get("DB_PORT","5432"),
     }
 }
 
