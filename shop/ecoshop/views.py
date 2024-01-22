@@ -106,13 +106,13 @@ def create_review(request):
     return render(request, "create_review_product.html", context=context)
 
 
-def info_ecoshop(request, ecoshop, street, number):
-    context = {
-        "ecoshop": ecoshop,
-        "street": street,
-        "number": number
-    }
-    return render(request, "info.html", context=context)
+# def info_ecoshop(request, ecoshop, street, number):
+#     context = {
+#         "ecoshop": ecoshop,
+#         "street": street,
+#         "number": number
+#     }
+#     return render(request, "info.html", context=context)
 
 
 
