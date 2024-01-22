@@ -114,6 +114,8 @@ def info_ecoshop(request, ecoshop, street, number):
     }
     return render(request, "info.html", context=context)
 
+
+
 #
 # def regular_year_views(request, year):
 #     return HttpResponse(f"year build is {year}")
