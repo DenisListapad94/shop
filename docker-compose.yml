@@ -4,10 +4,12 @@ services:
     build:
       context: .
     ports:
-      - 8000:8000
-    command: "/bin/sh -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:8000'"
+      - "8000:8000"
+    command: >
+      sh -c "python3 manage.py migrate &&
+             python3 manage.py runserver 0.0.0.0:8000"
     volumes:
-      - "./shop:/shop/shop"
+      - ./shop:/shop
     environment:
       DB_USER: postgres
       DB_PASS: postgres
@@ -21,10 +23,45 @@ services:
     ports:
       - 15433:5433
     volumes:
-      - "db_data:/var/lib/postgresql/data"
+      - "pgdata:/var/lib/postgresql/data"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "6379:6379"
+
+  celery:
+    restart: always
+    build:
+      context: .
+    environment:
+      BROKER_URL: "redis://redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+    command: celery -A shop worker -l info
+    volumes:
+      - ./shop:/shop
+    depends_on:
+      - redis
+  flower:
+    restart: always
+    build:
+      context: .
+    environment:
+      BROKER_URL: "redis://redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+    command: celery -A shop flower
+    volumes:
+      - ./shop:/shop
+    ports:
+      - "5566:5555"
+    depends_on:
+      - celery
+      - redis
 volumes:
-  db_data:
+  pgdata:
